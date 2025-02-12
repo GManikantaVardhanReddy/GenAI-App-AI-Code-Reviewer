@@ -1,28 +1,31 @@
 import streamlit as st
-import google.generativeai as gena
+import google.generativeai as genai
 
-# Set your OpenAI API Key
-gena.api_key = "AIzaSyDplai8TdzRpuYaY73_cRD0JiZajCyhqu4"
+# Configure API key
+genai.configure(api_key="AIzaSyDplai8TdzRpuYaY73_cRD0JiZajCyhqu4")  # Replace with your actual API key
 
-st.title("💬 An AI Code Reviewer")
-st.subheader("Enter your Python code below and get a review!")
+# Streamlit UI
+st.title("🤖 AI Code Reviewer")
+st.write("Enter your Python code below and get a detailed review!")
 
-# Text area for user input
-user_code = st.text_area("Enter your Python code here ...", height=200)
+user_code = st.text_area("Enter Python code here ...", height=250)
 
-if st.button("Generate"):
+if st.button("Generate Review"):
     if user_code.strip():
-        with st.spinner("Analyzing code..."):
-            prompt = f"Review the following Python code and provide a bug report and corrected version:\n\n{user_code}"
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[{"role": "system", "content": "You are an AI code reviewer."},
-                          {"role": "user", "content": prompt}]
-            )
-            result = response["choices"][0]["message"]["content"]
+        st.write("Analyzing your code... Please wait ⏳")
 
-        st.subheader("Code Review")
-        st.markdown(result)  # Display AI-generated output
+        # Creating the prompt for AI
+        prompt = f"Review the following Python code. Identify potential bugs, inefficiencies, and suggest improvements:\n\n{user_code}"
+
+        # Call Google Generative AI API
+        try:
+            model = genai.GenerativeModel("gemini-pro")  # Correct model
+            response = model.generate_content(prompt)  # Generate AI response
+            review_result = response.text  # Extract text
+
+            st.subheader("🔍 Code Review Report")
+            st.markdown(review_result)
+        except Exception as e:
+            st.error(f"Error while analyzing code: {e}")
     else:
-        st.warning("Please enter some Python code.")
-
+        st.warning("⚠️ Please enter some Python code first.")
