@@ -20,6 +20,7 @@ The app is built using **Streamlit** for UI and **Google Gemini AI** for code an
 📁 AI-Code-Reviewer
 │── app.py                 # Main application file
 │── README.md               # Project documentation
+│── requirements.tx        # requirements 
 ```
 
 ---
